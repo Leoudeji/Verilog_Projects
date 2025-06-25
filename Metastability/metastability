@@ -1,0 +1,65 @@
+#! /c/iverilog/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision - 12;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_010B3BE0 .scope module, "metastability_tb" "metastability_tb" 2 23;
+ .timescale -9 -12;
+v010BD928_0 .var "async_in", 0 0;
+v010BD980_0 .var "clk", 0 0;
+v010BD9D8_0 .net "sync_out", 0 0, v010BD8D0_0; 1 drivers
+S_010B3288 .scope module, "uut" "metastability" 2 30, 3 23, S_010B3BE0;
+ .timescale -9 -12;
+v010B3310_0 .net "async_in", 0 0, v010BD928_0; 1 drivers
+v010B3368_0 .net "clk", 0 0, v010BD980_0; 1 drivers
+v010BD878_0 .var "sync_ff1", 0 0;
+v010BD8D0_0 .var "sync_out", 0 0;
+E_010B7D18 .event posedge, v010B3368_0;
+    .scope S_010B3288;
+T_0 ;
+    %wait E_010B7D18;
+    %load/v 8, v010B3310_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v010BD878_0, 0, 8;
+    %load/v 8, v010BD878_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v010BD8D0_0, 0, 8;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_010B3BE0;
+T_1 ;
+    %set/v v010BD980_0, 0, 1;
+    %end;
+    .thread T_1;
+    .scope S_010B3BE0;
+T_2 ;
+    %delay 5000, 0;
+    %load/v 8, v010BD980_0, 1;
+    %inv 8, 1;
+    %set/v v010BD980_0, 8, 1;
+    %jmp T_2;
+    .thread T_2;
+    .scope S_010B3BE0;
+T_3 ;
+    %vpi_call 2 42 "$dumpfile", "metastability.vcd";
+    %vpi_call 2 43 "$dumpvars", 1'sb0, S_010B3BE0;
+    %set/v v010BD928_0, 0, 1;
+    %delay 12000, 0;
+    %set/v v010BD928_0, 1, 1;
+    %delay 7000, 0;
+    %set/v v010BD928_0, 0, 1;
+    %delay 3000, 0;
+    %set/v v010BD928_0, 1, 1;
+    %delay 9000, 0;
+    %set/v v010BD928_0, 0, 1;
+    %delay 50000, 0;
+    %vpi_call 2 56 "$finish";
+    %end;
+    .thread T_3;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "metastability_tb.v";
+    "metastability.v";
